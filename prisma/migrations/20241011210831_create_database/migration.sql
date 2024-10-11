@@ -4,7 +4,7 @@ CREATE TABLE "users" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "avatar" TEXT NOT NULL,
+    "avatar" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
@@ -37,11 +37,11 @@ CREATE TABLE "user_role_methods" (
 );
 
 -- CreateTable
-CREATE TABLE "users_project_teams" (
+CREATE TABLE "users_on_teams" (
     "user_id" INTEGER NOT NULL,
     "project_team_id" INTEGER NOT NULL,
 
-    CONSTRAINT "users_project_teams_pkey" PRIMARY KEY ("user_id","project_team_id")
+    CONSTRAINT "users_on_teams_pkey" PRIMARY KEY ("user_id","project_team_id")
 );
 
 -- CreateTable
@@ -61,7 +61,7 @@ CREATE TABLE "projects" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
+    "cover" TEXT,
     "started_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
@@ -71,29 +71,29 @@ CREATE TABLE "projects" (
 );
 
 -- CreateTable
-CREATE TABLE "campaign" (
+CREATE TABLE "campaigns" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
+    "cover" TEXT,
     "started_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
     "finished_at" TIMESTAMP(3),
     "project_id" INTEGER,
 
-    CONSTRAINT "campaign_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "campaigns_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Category" (
+CREATE TABLE "categories" (
     "id" SERIAL NOT NULL,
     "description" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -112,7 +112,7 @@ CREATE TABLE "tasks" (
 );
 
 -- CreateTable
-CREATE TABLE "ProjectTeamRole" (
+CREATE TABLE "project_team_roles" (
     "id" SERIAL NOT NULL,
     "description" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -120,11 +120,11 @@ CREATE TABLE "ProjectTeamRole" (
     "deleted_at" TIMESTAMP(3),
     "project_team_id" INTEGER,
 
-    CONSTRAINT "ProjectTeamRole_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "project_team_roles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "ProjectTeamRoleMethod" (
+CREATE TABLE "project_team_role_methods" (
     "id" SERIAL NOT NULL,
     "description" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -132,18 +132,18 @@ CREATE TABLE "ProjectTeamRoleMethod" (
     "deleted_at" TIMESTAMP(3),
     "project_team_role_id" INTEGER,
 
-    CONSTRAINT "ProjectTeamRoleMethod_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "project_team_role_methods_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Method" (
+CREATE TABLE "methods" (
     "id" SERIAL NOT NULL,
     "description" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "Method_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "methods_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -156,25 +156,25 @@ ALTER TABLE "users" ADD CONSTRAINT "users_user_role_id_fkey" FOREIGN KEY ("user_
 ALTER TABLE "user_role_methods" ADD CONSTRAINT "user_role_methods_user_role_id_fkey" FOREIGN KEY ("user_role_id") REFERENCES "user_roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users_project_teams" ADD CONSTRAINT "users_project_teams_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users_on_teams" ADD CONSTRAINT "users_on_teams_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users_project_teams" ADD CONSTRAINT "users_project_teams_project_team_id_fkey" FOREIGN KEY ("project_team_id") REFERENCES "project_teams"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users_on_teams" ADD CONSTRAINT "users_on_teams_project_team_id_fkey" FOREIGN KEY ("project_team_id") REFERENCES "project_teams"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "project_teams" ADD CONSTRAINT "project_teams_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "projects"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "campaign" ADD CONSTRAINT "campaign_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "projects"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "campaigns" ADD CONSTRAINT "campaigns_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "projects"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "campaign"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "campaigns"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectTeamRole" ADD CONSTRAINT "ProjectTeamRole_project_team_id_fkey" FOREIGN KEY ("project_team_id") REFERENCES "project_teams"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "project_team_roles" ADD CONSTRAINT "project_team_roles_project_team_id_fkey" FOREIGN KEY ("project_team_id") REFERENCES "project_teams"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectTeamRoleMethod" ADD CONSTRAINT "ProjectTeamRoleMethod_project_team_role_id_fkey" FOREIGN KEY ("project_team_role_id") REFERENCES "ProjectTeamRole"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "project_team_role_methods" ADD CONSTRAINT "project_team_role_methods_project_team_role_id_fkey" FOREIGN KEY ("project_team_role_id") REFERENCES "project_team_roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;

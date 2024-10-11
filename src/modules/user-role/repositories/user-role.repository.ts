@@ -8,7 +8,25 @@ export class UserRoleRepository {
 
   create(userRole: IUserRoleDTO): Promise<IUserRoleDTO> {
     return this.prismaService.userRole.create({
-      data: userRole,
+      data: {
+        ...userRole,
+        methods: {
+          connect: userRole.methods,
+        },
+      },
+      include: { methods: true },
+    });
+  }
+
+  update(id: number, userRole: IUserRoleDTO): Promise<IUserRoleDTO> {
+    return this.prismaService.userRole.update({
+      where: { id },
+      data: {
+        ...userRole,
+        methods: {
+          set: userRole.methods,
+        },
+      },
       include: { methods: true },
     });
   }
@@ -21,14 +39,6 @@ export class UserRoleRepository {
 
   async delete(id: number): Promise<void> {
     await this.prismaService.userRole.delete({ where: { id } });
-  }
-
-  update(id: number, userRole: IUserRoleDTO): Promise<IUserRoleDTO> {
-    return this.prismaService.userRole.update({
-      where: { id },
-      data: userRole,
-      include: { methods: true },
-    });
   }
 
   findById(id: number): Promise<IUserRoleDTO> {

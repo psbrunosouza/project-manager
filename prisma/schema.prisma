@@ -51,7 +51,7 @@ model UserRoleMethod {
   updatedAt   DateTime  @default(now()) @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
-  UserRole   UserRole? @relation(fields: [userRoleId], references: [id])
+  UserRole   UserRole? @relation(fields: [userRoleId], references: [id], onUpdate: Cascade)
   userRoleId Int?      @map("user_role_id")
 
   @@map("user_role_methods")
