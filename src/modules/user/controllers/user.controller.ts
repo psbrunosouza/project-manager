@@ -9,8 +9,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { PublicAccess } from 'src/shared/decorators/public-access.decorator';
-import { IUserDTO } from './dtos/user.dto';
-import { UserService } from './services/user.service';
+import { IUserDTO } from '../dtos/user.dto';
+import { UserService } from '../services/user.service';
 
 @Controller('users')
 export class UserController {
@@ -27,7 +27,6 @@ export class UserController {
     }
   }
 
-  @HttpCode(HttpStatus.OK)
   @Get()
   async list(): Promise<IUserDTO[]> {
     try {
@@ -37,7 +36,6 @@ export class UserController {
     }
   }
 
-  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<IUserDTO> {
     try {
