@@ -1,3 +1,3 @@
-export class TokenDTO {
+export class ITokenDTO {
   token: string;
 }

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PublicAccess } from 'src/shared/decorators/public-access.decorator';
 import { IUserDTO } from './dtos/user.dto';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 
 @Controller('users')
 export class UserController {

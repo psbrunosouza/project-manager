@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../shared/services/prisma.service';
-import { IUserDTO } from './dtos/user.dto';
+import { PrismaService } from '../../../shared/services/prisma.service';
+import { IUserDTO } from '../dtos/user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -19,6 +19,6 @@ export class UserRepository {
   }
 
   list(): Promise<IUserDTO[]> {
-    return this.prismaService.user.findMany();
+    return this.prismaService.user.findMany({});
   }
 }

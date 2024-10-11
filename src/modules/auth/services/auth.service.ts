@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserService } from '../user/user.service';
-import { AccountDTO } from './dtos/account.dto';
-import { TokenDTO } from './dtos/token.dto';
+import { UserService } from 'src/modules/user/services/user.service';
+import { IAccountDTO } from '../dtos/account.dto';
+import { ITokenDTO } from '../dtos/token.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
     private userService: UserService,
   ) {}
 
-  async singIn({ email, password }: AccountDTO): Promise<TokenDTO> {
+  async singIn({ email, password }: IAccountDTO): Promise<ITokenDTO> {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {

@@ -4,14 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { IUserDTO } from './dtos/user.dto';
-import { UserRepository } from './user.repository';
+import { excludeFieldHelper } from 'src/shared/helpers/exclude-field.helper';
+import { IUserDTO } from '../dtos/user.dto';
+import { UserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async create(data: IUserDTO): Promise<Omit<IUserDTO, 'password'>> {
+  async create(data: IUserDTO): Promise<IUserDTO> {
     const hash = await bcrypt.hash(
       data.password,
       Number(process.env.HASH_PASSWORD_SALTS),
@@ -23,21 +24,23 @@ export class UserService {
       throw new ConflictException('Email already exists');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = await this.userRepository.create({
-      ...data,
-      password: hash,
-    });
-
-    return user;
+    return excludeFieldHelper<IUserDTO, 'password'>(
+      await this.userRepository.create({
+        ...data,
+        password: hash,
+      }),
+      ['password'],
+    ) as IUserDTO;
   }
 
-  list(): Promise<IUserDTO[]> {
-    return this.userRepository.list();
+  async list(): Promise<IUserDTO[]> {
+    return (await this.userRepository.list()).map((user) => {
+      return excludeFieldHelper<IUserDTO, 'password'>(user, ['password']);
+    }) as IUserDTO[];
   }
 
   async findByEmail(email: string): Promise<IUserDTO> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
@@ -47,7 +50,10 @@ export class UserService {
   }
 
   async findById(id: number): Promise<IUserDTO> {
-    const user = await this.userRepository.findById(id);
+    const user = excludeFieldHelper<IUserDTO, 'password'>(
+      await this.userRepository.findById(id),
+      ['password'],
+    ) as IUserDTO;
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
