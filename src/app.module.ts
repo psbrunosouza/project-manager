@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { UserRoleMethodModule } from './modules/user-role-method/user-role-method.module';
 import { UserRoleModule } from './modules/user-role/user-role.module';
 import { UserModule } from './modules/user/user.module';
 import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
@@ -14,6 +15,7 @@ import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
     UserModule,
     AuthModule,
     UserRoleModule,
+    UserRoleMethodModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
