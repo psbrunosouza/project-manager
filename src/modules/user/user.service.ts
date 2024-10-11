@@ -1,6 +1,10 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { IUserDTO } from './user.dto';
+import { IUserDTO } from './dtos/user.dto';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -32,11 +36,23 @@ export class UserService {
     return this.userRepository.list();
   }
 
-  findByEmail(email: string): Promise<IUserDTO> {
-    return this.userRepository.findByEmail(email);
+  async findByEmail(email: string): Promise<IUserDTO> {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
   }
 
-  findById(id: number): Promise<IUserDTO> {
-    return this.userRepository.findById(id);
+  async findById(id: number): Promise<IUserDTO> {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
   }
 }
