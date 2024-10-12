@@ -22,6 +22,7 @@ import { PrismaModule } from './shared/modules/prisma/prisma.module';
     MethodModule,
     ProjectModule,
     PrismaModule,
+    ProjectModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

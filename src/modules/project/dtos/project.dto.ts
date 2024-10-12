@@ -12,5 +12,7 @@ export class IProjectDTO extends IDefaultDTO {
 
   @IsString()
   @IsOptional()
-  cover: string;
+  cover?: string;
+
+  teams?: any;
 }
