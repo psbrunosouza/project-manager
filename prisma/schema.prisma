@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,48 +8,31 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String
-  email        String        @unique
-  password     String
-  avatar       String?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @default(now()) @map("updated_at")
-  deletedAt    DateTime?     @map("deleted_at")
-  role         Role?         @relation(fields: [roleId], references: [id])
-  roleId       Int?
-  projectTeams ProjectTeam[]
-
-  @@map("users")
-}
-
-model ProjectTeam {
   id        Int       @id @default(autoincrement())
   name      String
+  email     String    @unique
+  password  String
+  avatar    String?
   createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @map("updated_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
+  role      Role?     @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  roleId    Int?      @map("role_id")
+  teams     Team[]
 
-  roles ProjectTeamRole[]
-  users User[]
-
-  Project   Project? @relation(fields: [projectId], references: [id])
-  projectId Int?     @map("project_id")
-
-  @@map("project_teams")
+  @@map("users")
 }
 
 model Role {
   id          Int       @id @default(autoincrement())
   description String
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
+  users       User[]
+  methods     Method[]
 
-  users   User[]
-  methods Method[]
-
-  @@map("user_roles")
+  @@map("roles")
 }
 
 model Method {
@@ -63,26 +40,24 @@ model Method {
   description String
   code        String
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
-
-  roles Role[]
+  roles       Role[]
 
   @@map("methods")
 }
 
 model Project {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   description String
   cover       String?
-  startedAt   DateTime  @default(now()) @map("started_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
-  finishedAt  DateTime? @map("finished_at")
-
-  projectTeams ProjectTeam[]
-  campaigns    Campaign[]
+  startedAt   DateTime   @default(now()) @map("started_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
+  finishedAt  DateTime?  @map("finished_at")
+  teams       Team[]
+  campaigns   Campaign[]
 
   @@map("projects")
 }
@@ -93,14 +68,12 @@ model Campaign {
   description String
   cover       String?
   startedAt   DateTime  @default(now()) @map("started_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
   finishedAt  DateTime? @map("finished_at")
-
-  Project   Project? @relation(fields: [projectId], references: [id])
-  projectId Int?     @map("project_id")
-
-  tasks Task[]
+  Project     Project?  @relation(fields: [projectId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  projectId   Int?      @map("project_id")
+  tasks       Task[]
 
   @@map("campaigns")
 }
@@ -109,10 +82,9 @@ model Category {
   id          Int       @id @default(autoincrement())
   description String
   createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
-
-  tasks Task[]
+  tasks       Task[]
 
   @@map("categories")
 }
@@ -122,40 +94,50 @@ model Task {
   name        String
   description String
   startedAt   DateTime  @default(now()) @map("started_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
   finishedAt  DateTime? @map("finished_at")
-
-  Campaign   Campaign? @relation(fields: [campaignId], references: [id])
-  campaignId Int?      @map("campaign_id")
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?      @map("category_id")
+  Campaign    Campaign? @relation(fields: [campaignId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  campaignId  Int?      @map("campaign_id")
+  Category    Category? @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  categoryId  Int?      @map("category_id")
 
   @@map("tasks")
 }
 
-model ProjectTeamRole {
-  id            Int          @id @default(autoincrement())
-  description   String
-  createdAt     DateTime     @default(now()) @map("created_at")
-  updatedAt     DateTime     @default(now()) @map("updated_at")
-  deletedAt     DateTime?    @map("deleted_at")
-  ProjectTeam   ProjectTeam? @relation(fields: [projectTeamId], references: [id])
-  projectTeamId Int?         @map("project_team_id")
+model Team {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+  Project   Project?   @relation(fields: [projectId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  projectId Int?       @map("project_id")
+  roles     TeamRole[]
+  users     User[]
 
-  methods ProjectTeamRoleMethod[]
-
-  @@map("project_team_roles")
+  @@map("teams")
 }
 
-model ProjectTeamRoleMethod {
-  id                Int              @id @default(autoincrement())
-  description       String
-  createdAt         DateTime         @default(now()) @map("created_at")
-  updatedAt         DateTime         @default(now()) @map("updated_at")
-  deletedAt         DateTime?        @map("deleted_at")
-  ProjectTeamRole   ProjectTeamRole? @relation(fields: [projectTeamRoleId], references: [id])
-  projectTeamRoleId Int?             @map("project_team_role_id")
+model TeamRole {
+  id          Int              @id @default(autoincrement())
+  description String
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?        @map("deleted_at")
+  team        Team?            @relation(fields: [teamId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  teamId      Int?             @map("team_id")
+  methods     TeamRoleMethod[]
 
-  @@map("project_team_role_methods")
+  @@map("team_roles")
+}
+
+model TeamRoleMethod {
+  id          Int        @id @default(autoincrement())
+  description String
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
+  roles       TeamRole[]
+
+  @@map("team_role_methods")
 }
