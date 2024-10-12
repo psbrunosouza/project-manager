@@ -1,6 +1,6 @@
 export class IDefaultDTO {
-  id: number;
+  id?: number;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date;
   deletedAt?: Date;
 }
