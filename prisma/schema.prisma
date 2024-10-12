@@ -14,20 +14,35 @@ datasource db {
 }
 
 model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  avatar       String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  role         Role?         @relation(fields: [roleId], references: [id])
+  roleId       Int?
+  projectTeams ProjectTeam[]
+
+  @@map("users")
+}
+
+model ProjectTeam {
   id        Int       @id @default(autoincrement())
   name      String
-  email     String    @unique
-  password  String
-  avatar    String?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  usersProjectTeams UserOnTeam[]
-  Role              Role?        @relation(fields: [roleId], references: [id])
-  roleId            Int?
+  roles ProjectTeamRole[]
+  users User[]
 
-  @@map("users")
+  Project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?     @map("project_id")
+
+  @@map("project_teams")
 }
 
 model Role {
@@ -54,32 +69,6 @@ model Method {
   roles Role[]
 
   @@map("methods")
-}
-
-model UserOnTeam {
-  user          User        @relation(fields: [userId], references: [id])
-  userId        Int         @map("user_id")
-  ProjectTeam   ProjectTeam @relation(fields: [projectTeamId], references: [id])
-  projectTeamId Int         @map("project_team_id")
-
-  @@id([userId, projectTeamId])
-  @@map("users_on_teams")
-}
-
-model ProjectTeam {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @default(now()) @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
-
-  userOnTeam UserOnTeam[]
-  roles      ProjectTeamRole[]
-
-  Project   Project? @relation(fields: [projectId], references: [id])
-  projectId Int?     @map("project_id")
-
-  @@map("project_teams")
 }
 
 model Project {

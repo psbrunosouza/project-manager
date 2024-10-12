@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { excludeFieldHelper } from 'src/shared/helpers/exclude-field.helper';
+import { ICreateUserDTO } from '../dtos/create-user.dto';
+import { IUpdateUserDTO } from '../dtos/update-user.dto';
 import { IUserDTO } from '../dtos/user.dto';
 import { UserRepository } from '../repositories/user.repository';
 
@@ -12,7 +14,7 @@ import { UserRepository } from '../repositories/user.repository';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async create(data: IUserDTO): Promise<IUserDTO> {
+  async create(data: ICreateUserDTO): Promise<ICreateUserDTO> {
     const hash = await bcrypt.hash(
       data.password,
       Number(process.env.HASH_PASSWORD_SALTS),
@@ -29,6 +31,19 @@ export class UserService {
         ...data,
         password: hash,
       }),
+      ['password'],
+    ) as IUserDTO;
+  }
+
+  async update(id: number, data: IUpdateUserDTO): Promise<IUserDTO> {
+    const existingUser = await this.findById(id);
+
+    if (!existingUser) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return excludeFieldHelper<IUserDTO, 'password'>(
+      await this.userRepository.update(id, data),
       ['password'],
     ) as IUserDTO;
   }

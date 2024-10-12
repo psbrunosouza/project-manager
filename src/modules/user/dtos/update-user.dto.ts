@@ -1,19 +1,11 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IRoleDTO } from 'src/modules/role/dtos/role.dto';
 import { IDefaultDTO } from 'src/shared/dtos/default.dto';
 
-export class IUserDTO extends IDefaultDTO {
+export class IUpdateUserDTO extends IDefaultDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  password: string;
 
   @IsString()
   @IsOptional()
