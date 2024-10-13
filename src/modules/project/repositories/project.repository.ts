@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/modules/prisma/services/prisma.service';
+import { PrismaService } from 'src/shared/databases/prisma/services/prisma.service';
 import { IProjectDTO } from './../dtos/project.dto';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class ProjectRepository {
   findById(id: number): Promise<IProjectDTO> {
     return this.prismaService.project.findUnique({
       where: { id },
-      include: { teams: true, campaigns: true },
+      include: { teams: { include: {} }, campaigns: true },
     });
   }
 

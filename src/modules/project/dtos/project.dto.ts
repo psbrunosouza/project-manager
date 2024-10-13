@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ITeamDTO } from 'src/modules/team/dtos/team.dto';
 import { IDefaultDTO } from 'src/shared/dtos/default.dto';
 
 export class IProjectDTO extends IDefaultDTO {
@@ -14,5 +15,5 @@ export class IProjectDTO extends IDefaultDTO {
   @IsOptional()
   cover?: string;
 
-  teams?: any;
+  teams?: ITeamDTO[];
 }

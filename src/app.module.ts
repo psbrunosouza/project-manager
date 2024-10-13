@@ -8,11 +8,12 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { MethodModule } from './modules/method/method.module';
 import { ProjectModule } from './modules/project/project.module';
 import { UserRoleModule } from './modules/role/role.module';
+import { TeamModule } from './modules/team/team.module';
 import { UserModule } from './modules/user/user.module';
 import { SeedCommand } from './shared/commands/seed.command';
+import { PrismaModule } from './shared/databases/prisma/prisma.module';
 import { SeedService } from './shared/databases/seeders/seed.service';
 import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
-import { PrismaModule } from './shared/modules/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PrismaModule } from './shared/modules/prisma/prisma.module';
     ProjectModule,
     PrismaModule,
     ProjectModule,
+    TeamModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

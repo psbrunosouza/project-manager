@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IRoleDTO } from 'src/modules/role/dtos/role.dto';
+import { ITeamDTO } from 'src/modules/team/dtos/team.dto';
 import { IDefaultDTO } from 'src/shared/dtos/default.dto';
 
 export class IUserDTO extends IDefaultDTO {
@@ -24,4 +25,7 @@ export class IUserDTO extends IDefaultDTO {
 
   @IsOptional()
   roleId?: number;
+
+  @IsOptional()
+  teams?: ITeamDTO[];
 }
