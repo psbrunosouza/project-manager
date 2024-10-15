@@ -18,7 +18,7 @@ export class IUserDTO extends IDefaultDTO {
 
   @IsString()
   @IsOptional()
-  avatar: string;
+  avatar?: string;
 
   @IsOptional()
   role?: IRoleDTO;

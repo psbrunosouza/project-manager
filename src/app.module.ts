@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { MethodModule } from './modules/method/method.module';
+import { ParticipantRoleModule } from './modules/participant-roles/participant-role.module';
 import { ProjectModule } from './modules/project/project.module';
 import { UserRoleModule } from './modules/role/role.module';
 import { TeamModule } from './modules/team/team.module';
@@ -25,6 +26,7 @@ import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
     PrismaModule,
     ProjectModule,
     TeamModule,
+    ParticipantRoleModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

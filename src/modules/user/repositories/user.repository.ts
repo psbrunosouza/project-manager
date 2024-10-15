@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/databases/prisma/services/prisma.service';
-import { ICreateUserDTO } from '../dtos/create-user.dto';
-import { IUpdateUserDTO } from '../dtos/update-user.dto';
 import { IUserDTO } from '../dtos/user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(private prismaService: PrismaService) {}
 
-  create(data: ICreateUserDTO): Promise<ICreateUserDTO> {
+  create(data: IUserDTO): Promise<IUserDTO> {
     return this.prismaService.user.create({
       data: {
         email: data.email,
@@ -27,7 +25,7 @@ export class UserRepository {
     });
   }
 
-  update(id: number, data: IUpdateUserDTO): Promise<IUserDTO> {
+  update(id: number, data: IUserDTO): Promise<IUserDTO> {
     return this.prismaService.user.update({
       where: { id },
       data: {
@@ -56,9 +54,12 @@ export class UserRepository {
     });
   }
 
-  findById(id: number): Promise<IUserDTO> {
+  findById(id: number): Promise<Omit<IUserDTO, 'password'>> {
     return this.prismaService.user.findUnique({
       where: { id },
+      omit: {
+        password: true,
+      },
       include: {
         role: {
           include: { methods: true },
@@ -67,7 +68,7 @@ export class UserRepository {
     });
   }
 
-  list(): Promise<IUserDTO[]> {
+  list(): Promise<Omit<IUserDTO, 'password'>[]> {
     return this.prismaService.user.findMany({
       include: {
         role: {

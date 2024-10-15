@@ -10,6 +10,8 @@ export class RemovePasswordMiddlewareService {
     this.prismaService.$use(async (params, next) => {
       const result = await next(params);
 
+      params.model === 'User';
+
       if (result === null || result === undefined) {
         return;
       }

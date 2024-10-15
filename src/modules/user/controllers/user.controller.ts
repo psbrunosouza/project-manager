@@ -10,8 +10,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { PublicAccess } from 'src/shared/decorators/public-access.decorator';
-import { ICreateUserDTO } from '../dtos/create-user.dto';
-import { IUpdateUserDTO } from '../dtos/update-user.dto';
 import { IUserDTO } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
@@ -22,9 +20,7 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @PublicAccess()
-  async create(
-    @Body() data: ICreateUserDTO,
-  ): Promise<Omit<IUserDTO, 'password'>> {
+  async create(@Body() data: IUserDTO): Promise<Omit<IUserDTO, 'password'>> {
     try {
       return await this.userService.create(data);
     } catch (error) {
@@ -35,7 +31,7 @@ export class UserController {
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: IUpdateUserDTO,
+    @Body() data: IUserDTO,
   ): Promise<IUserDTO> {
     try {
       return await this.userService.update(id, data);
@@ -45,7 +41,7 @@ export class UserController {
   }
 
   @Get()
-  async list(): Promise<IUserDTO[]> {
+  async list(): Promise<Omit<IUserDTO, 'password'>[]> {
     try {
       return await this.userService.list();
     } catch (error) {
@@ -54,7 +50,9 @@ export class UserController {
   }
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<IUserDTO> {
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Omit<IUserDTO, 'password'>> {
     try {
       return await this.userService.findById(id);
     } catch (error) {

@@ -4,8 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { ICreateUserDTO } from '../dtos/create-user.dto';
-import { IUpdateUserDTO } from '../dtos/update-user.dto';
 import { IUserDTO } from '../dtos/user.dto';
 import { UserRepository } from '../repositories/user.repository';
 
@@ -13,7 +11,7 @@ import { UserRepository } from '../repositories/user.repository';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async create(data: ICreateUserDTO): Promise<ICreateUserDTO> {
+  async create(data: IUserDTO): Promise<IUserDTO> {
     const hash = await bcrypt.hash(
       data.password,
       Number(process.env.HASH_PASSWORD_SALTS),
@@ -31,7 +29,7 @@ export class UserService {
     });
   }
 
-  async update(id: number, data: IUpdateUserDTO): Promise<IUserDTO> {
+  async update(id: number, data: IUserDTO): Promise<IUserDTO> {
     const existingUser = await this.findById(id);
 
     if (!existingUser) {
@@ -41,7 +39,7 @@ export class UserService {
     return this.userRepository.update(id, data);
   }
 
-  list(): Promise<IUserDTO[]> {
+  list(): Promise<Omit<IUserDTO, 'password'>[]> {
     return this.userRepository.list();
   }
 
@@ -55,7 +53,7 @@ export class UserService {
     return user;
   }
 
-  findById(id: number): Promise<IUserDTO> {
+  findById(id: number): Promise<Omit<IUserDTO, 'password'>> {
     const user = this.userRepository.findById(id);
 
     if (!user) {

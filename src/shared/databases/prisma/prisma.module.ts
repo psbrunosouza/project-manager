@@ -1,4 +1,4 @@
-import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { RemovePasswordMiddlewareService } from './middlewares/remove-password-middleware.service';
 import { PrismaService } from './services/prisma.service';
 
@@ -10,7 +10,7 @@ import { PrismaService } from './services/prisma.service';
   exports: [PrismaService],
 })
 export class PrismaModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RemovePasswordMiddlewareService).forRoutes('*');
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(RemovePasswordMiddlewareService).forRoutes('*');
+  // }
 }
