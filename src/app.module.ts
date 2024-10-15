@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { CampaignModule } from './modules/campaign/campaign.module';
 import { MethodModule } from './modules/method/method.module';
 import { ParticipantMethodModule } from './modules/participant-method/participant-method.module';
 import { ParticipantRoleModule } from './modules/participant-role/participant-role.module';
@@ -29,6 +30,7 @@ import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
     TeamModule,
     ParticipantMethodModule,
     ParticipantRoleModule,
+    CampaignModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

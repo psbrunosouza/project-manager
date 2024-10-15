@@ -8,6 +8,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int          @id @default(autoincrement())
+  name         String
+  email        String       @unique
+  password     String
+  avatar       String?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
+  deletedAt    DateTime?    @map("deleted_at")
+  role         Role?        @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  roleId       Int?         @map("role_id")
+  usersOnTeams UserOnTeam[]
+
+  @@map("users")
+}
+
 model Role {
   id          Int       @id @default(autoincrement())
   description String
@@ -30,33 +46,6 @@ model Method {
   roles       Role[]
 
   @@map("methods")
-}
-
-model Category {
-  id          Int       @id @default(autoincrement())
-  description String
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
-  tasks       Task[]
-
-  @@map("categories")
-}
-
-model Task {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String
-  startedAt   DateTime  @default(now()) @map("started_at")
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
-  finishedAt  DateTime? @map("finished_at")
-  Campaign    Campaign? @relation(fields: [campaignId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  campaignId  Int?      @map("campaign_id")
-  Category    Category? @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  categoryId  Int?      @map("category_id")
-
-  @@map("tasks")
 }
 
 model Project {
@@ -83,11 +72,36 @@ model Campaign {
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
   finishedAt  DateTime? @map("finished_at")
-  Project     Project?  @relation(fields: [projectId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  project     Project?  @relation(fields: [projectId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   projectId   Int?      @map("project_id")
   tasks       Task[]
 
   @@map("campaigns")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  startedAt   DateTime  @default(now()) @map("started_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  finishedAt  DateTime? @map("finished_at")
+  campaign    Campaign? @relation(fields: [campaignId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  campaignId  Int?      @map("campaign_id")
+
+  @@map("tasks")
+}
+
+model Team {
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
+  deletedAt    DateTime?    @map("deleted_at")
+  projects     Project[]
+  usersOnTeams UserOnTeam[]
+
+  @@map("teams")
 }
 
 model ParticipantRole {
@@ -112,33 +126,6 @@ model ParticipantMethod {
   roles       ParticipantRole[]
 
   @@map("participant_methods")
-}
-
-model User {
-  id           Int          @id @default(autoincrement())
-  name         String
-  email        String       @unique
-  password     String
-  avatar       String?
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
-  deletedAt    DateTime?    @map("deleted_at")
-  role         Role?        @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  roleId       Int?         @map("role_id")
-  usersOnTeams UserOnTeam[]
-
-  @@map("users")
-}
-
-model Team {
-  id           Int          @id @default(autoincrement())
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at")
-  deletedAt    DateTime?    @map("deleted_at")
-  projects     Project[]
-  usersOnTeams UserOnTeam[]
-
-  @@map("teams")
 }
 
 model UserOnTeam {

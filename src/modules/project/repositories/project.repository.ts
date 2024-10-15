@@ -9,7 +9,9 @@ export class ProjectRepository {
   create(data: IProjectDTO): Promise<IProjectDTO> {
     return this.prismaService.project.create({
       data: {
-        ...data,
+        description: data.description,
+        name: data.name,
+        cover: data.cover,
         teams: {
           connect: data.teams && data.teams.map((team) => ({ id: team.id })),
         },
@@ -22,7 +24,9 @@ export class ProjectRepository {
     return this.prismaService.project.update({
       where: { id },
       data: {
-        ...data,
+        description: data.description,
+        cover: data.cover,
+        name: data.name,
         teams: {
           set: data.teams && data.teams.map((team) => ({ id: team.id })),
         },
