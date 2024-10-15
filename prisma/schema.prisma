@@ -103,13 +103,13 @@ model ParticipantRole {
 }
 
 model ParticipantMethod {
-  id           Int               @id @default(autoincrement())
-  description  String
-  code         String
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime          @default(now()) @updatedAt @map("updated_at")
-  deletedAt    DateTime?         @map("deleted_at")
-  participants ParticipantRole[]
+  id          Int               @id @default(autoincrement())
+  description String
+  code        String
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?         @map("deleted_at")
+  roles       ParticipantRole[]
 
   @@map("participant_methods")
 }

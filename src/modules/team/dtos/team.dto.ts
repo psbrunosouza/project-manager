@@ -1,6 +1,6 @@
 import { UserOnTeam } from '@prisma/client';
 import { IsOptional } from 'class-validator';
-import { IParticipantRoleDTO } from 'src/modules/participant-roles/dtos/participant-role.dto';
+import { IParticipantRoleDTO } from 'src/modules/participant-role/dtos/participant-role.dto';
 import { IProjectDTO } from 'src/modules/project/dtos/project.dto';
 import { IUserDTO } from 'src/modules/user/dtos/user.dto';
 import { IDefaultDTO } from 'src/shared/dtos/default.dto';

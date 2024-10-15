@@ -1,4 +1,4 @@
-import { UserOnTeam } from '@prisma/client';
+import { ParticipantMethod, UserOnTeam } from '@prisma/client';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IDefaultDTO } from 'src/shared/dtos/default.dto';
 
@@ -8,7 +8,7 @@ export class IParticipantRoleDTO extends IDefaultDTO {
   description: string;
 
   @IsOptional()
-  methods?: any[];
+  methods?: ParticipantMethod[];
 
   @IsOptional()
   usersOnTeams?: UserOnTeam[];
