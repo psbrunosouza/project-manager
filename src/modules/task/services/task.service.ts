@@ -25,4 +25,8 @@ export class TaskService {
   list(): Promise<ITaskDTO[]> {
     return this.taskRepository.list();
   }
+
+  finishTask(id: number): Promise<ITaskDTO> {
+    return this.taskRepository.finishTask(id);
+  }
 }

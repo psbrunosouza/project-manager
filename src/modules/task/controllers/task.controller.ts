@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -58,6 +59,15 @@ export class TaskController {
   list(): Promise<ITaskDTO[]> {
     try {
       return this.taskService.list();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Patch('finish/:id')
+  finishTask(@Param('id', ParseIntPipe) id: number): Promise<ITaskDTO> {
+    try {
+      return this.taskService.finishTask(id);
     } catch (error) {
       throw error;
     }

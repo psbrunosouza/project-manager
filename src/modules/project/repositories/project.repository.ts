@@ -13,7 +13,7 @@ export class ProjectRepository {
         name: data.name,
         cover: data.cover,
         teams: {
-          connect: data.teams && data.teams.map((team) => ({ id: team.id })),
+          connect: data?.teams?.map((team) => ({ id: team.id })),
         },
       },
       include: { teams: true, campaigns: true },

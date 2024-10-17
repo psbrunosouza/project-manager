@@ -39,15 +39,25 @@ export class TaskRepository {
     });
   }
 
-  async findById(id: number): Promise<ITaskDTO> {
+  findById(id: number): Promise<ITaskDTO> {
     return this.prismaService.task.findUnique({
       where: { id },
       include: { campaign: true },
     });
   }
 
-  async list(): Promise<ITaskDTO[]> {
+  list(): Promise<ITaskDTO[]> {
     return this.prismaService.task.findMany({
+      include: { campaign: true },
+    });
+  }
+
+  finishTask(id: number): Promise<ITaskDTO> {
+    return this.prismaService.task.update({
+      where: { id },
+      data: {
+        finishedAt: new Date(),
+      },
       include: { campaign: true },
     });
   }
