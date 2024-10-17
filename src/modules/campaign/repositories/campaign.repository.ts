@@ -12,11 +12,11 @@ export class CampaignRepository {
         name: campaign.name,
         description: campaign.description,
         cover: campaign.cover,
-        Project: {
+        project: {
           connect: { id: campaign.project.id },
         },
       },
-      include: { Project: true },
+      include: { project: true },
     });
   }
 
@@ -27,24 +27,24 @@ export class CampaignRepository {
         name: campaign.name,
         description: campaign.description,
         cover: campaign.cover,
-        Project: {
+        project: {
           connect: { id: campaign.project.id },
         },
       },
-      include: { Project: true },
+      include: { project: true },
     });
   }
 
   list(): Promise<ICampaignDTO[]> {
     return this.prismaService.campaign.findMany({
-      include: { Project: true },
+      include: { project: true },
     });
   }
 
   findById(id: number): Promise<ICampaignDTO> {
     return this.prismaService.campaign.findUnique({
       where: { id },
-      include: { Project: true },
+      include: { project: true },
     });
   }
 

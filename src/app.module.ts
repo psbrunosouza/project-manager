@@ -11,6 +11,7 @@ import { ParticipantMethodModule } from './modules/participant-method/participan
 import { ParticipantRoleModule } from './modules/participant-role/participant-role.module';
 import { ProjectModule } from './modules/project/project.module';
 import { UserRoleModule } from './modules/role/role.module';
+import { TaskModule } from './modules/task/task.module';
 import { TeamModule } from './modules/team/team.module';
 import { UserModule } from './modules/user/user.module';
 import { SeedCommand } from './shared/commands/seed.command';
@@ -31,6 +32,7 @@ import { PrismaExceptionFilter } from './shared/filters/http-exception.filter';
     ParticipantMethodModule,
     ParticipantRoleModule,
     CampaignModule,
+    TaskModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

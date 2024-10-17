@@ -1,0 +1,145 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table users {
+  id Int [pk, increment]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  avatar String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  role roles
+  roleId Int
+  usersOnTeams users_on_teams [not null]
+}
+
+Table roles {
+  id Int [pk, increment]
+  description String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  users users [not null]
+  methods methods [not null]
+}
+
+Table methods {
+  id Int [pk, increment]
+  description String [not null]
+  code String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  roles roles [not null]
+}
+
+Table projects {
+  id Int [pk, increment]
+  name String [not null]
+  description String [not null]
+  cover String
+  startedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  finishedAt DateTime
+  teams teams [not null]
+  campaigns campaigns [not null]
+}
+
+Table campaigns {
+  id Int [pk, increment]
+  name String [not null]
+  description String [not null]
+  cover String
+  startedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  finishedAt DateTime
+  project projects
+  projectId Int
+  tasks tasks [not null]
+}
+
+Table tasks {
+  id Int [pk, increment]
+  name String [not null]
+  description String [not null]
+  startedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  finishedAt DateTime
+  campaign campaigns
+  campaignId Int
+}
+
+Table teams {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  projects projects [not null]
+  usersOnTeams users_on_teams [not null]
+}
+
+Table participant_roles {
+  id Int [pk, increment]
+  description String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  methods participant_methods [not null]
+  usersOnTeams users_on_teams [not null]
+}
+
+Table participant_methods {
+  id Int [pk, increment]
+  description String [not null]
+  code String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+  roles participant_roles [not null]
+}
+
+Table users_on_teams {
+  user users
+  userId Int [not null]
+  team teams
+  teamId Int [not null]
+  role participant_roles
+  roleId Int
+
+  indexes {
+    (userId, teamId) [pk]
+  }
+}
+
+Table MethodToRole {
+  methodsId Int [ref: > methods.id]
+  rolesId Int [ref: > roles.id]
+}
+
+Table ProjectToTeam {
+  teamsId Int [ref: > teams.id]
+  projectsId Int [ref: > projects.id]
+}
+
+Table ParticipantMethodToParticipantRole {
+  methodsId Int [ref: > participant_methods.id]
+  rolesId Int [ref: > participant_roles.id]
+}
+
+Ref: users.roleId > roles.id [delete: Cascade]
+
+Ref: campaigns.projectId > projects.id [delete: Cascade]
+
+Ref: tasks.campaignId > campaigns.id [delete: Cascade]
+
+Ref: users_on_teams.userId > users.id [delete: Cascade]
+
+Ref: users_on_teams.teamId > teams.id [delete: Cascade]
+
+Ref: users_on_teams.roleId > participant_roles.id [delete: Cascade]
